@@ -1,0 +1,19 @@
+{
+    "name": "endeavors/openjwt",
+    "require": {
+        "firebase/php-jwt": "~5.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Endeavors\\OpenJWT\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Endeavors\\OpenJWT\\Tests\\": "tests/"
+        }
+    }
+}
