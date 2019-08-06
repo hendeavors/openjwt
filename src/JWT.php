@@ -3,6 +3,8 @@
 namespace Endeavors\OpenJWT;
 
 use Endeavors\OpenJWT\Contracts\JWTValidator;
+use Endeavors\OpenJWT\Validator\Concerns\Decoding;
+use UnexpectedValueException;
 
 // In the case where the JWS alg is "none", the app must reject any
 // claims where the issuer is different from the url of the authorization server. (3.2.2.11)
@@ -10,6 +12,7 @@ use Endeavors\OpenJWT\Contracts\JWTValidator;
 
 class JWT
 {
+    use Decoding;
     /**
      * [decode description]
      * @param  [type] $jwt       [description]
@@ -27,5 +30,7 @@ class JWT
          list($headers, $payload, $signature) = $tks;
 
          $validator->validate();
+
+         return static::jsonDecode(static::urlsafeB64Decode($payload));
      }
 }

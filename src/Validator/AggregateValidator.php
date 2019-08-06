@@ -6,8 +6,19 @@ use Endeavors\OpenJWT\Contracts\JWTValidator;
 
 class AggregateValidator implements JWTValidator
 {
+    private $validators = [];
+
     public function validate()
     {
-        // we are only inspecting the token
+        foreach($this->validators as $validator) {
+            $validator->validate();
+        }
+    }
+
+    public function add(JWTValidator $validator)
+    {
+        $this->validators[] = $validator;
+
+        return $this;
     }
 }

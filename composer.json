@@ -1,10 +1,9 @@
 {
     "name": "endeavors/openjwt",
-    "require": {
-        "firebase/php-jwt": "~5.0"
-    },
     "require-dev": {
-        "phpunit/phpunit": "~6.0"
+        "phpunit/phpunit": "~6.0",
+        "symfony/var-dumper": "^3.4",
+        "firebase/php-jwt": "~5.0"
     },
     "autoload": {
         "psr-4": {

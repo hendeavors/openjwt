@@ -18,9 +18,6 @@ class SignatureValidator implements JWTValidator, Algorithm
         $this->value = $value;
 
         $this->key = $key;
-
-        // TODO inspect the JWT
-        // THEN validate according the inspected values
     }
 
     public function validate()
@@ -28,9 +25,13 @@ class SignatureValidator implements JWTValidator, Algorithm
         $function = key(static::SUPPORTED[$this->algorithm]);
         $algorithm = static::SUPPORTED[$this->algorithm][$function];
 
+        $tks = explode('.', $this->value);
+
+        list($headers, $payload, $signature) = $tks;
+
         switch($function) {
             case 'openssl':
-                $success = openssl_verify($msg, $signature, $key, $algorithm);
+                $success = openssl_verify($headers.$payload, $signature, $this->key, $algorithm);
                 if ($success === 1) {
                     return true;
                 } elseif ($success === 0) {
@@ -42,7 +43,7 @@ class SignatureValidator implements JWTValidator, Algorithm
                 );
             case 'hash_hmac':
             default:
-                $hash = hash_hmac($algorithm, $this->message, $this->key, true);
+                $hash = hash_hmac($algorithm, $headers.$payload, $this->key, true);
                 if (function_exists('hash_equals')) {
                     return hash_equals($signature, $hash);
                 }
