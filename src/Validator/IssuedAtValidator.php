@@ -14,7 +14,7 @@ use UnexpectedValueException;
 // If an azp (authorized party) Claim is present, the Client SHOULD verify that its client_id is the Claim Value.
 // https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation
 
-class AudienceValidator extends Validator implements JWTValidator
+class IssuedAtValidator extends Validator implements JWTValidator
 {
     private $audience;
 

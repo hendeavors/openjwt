@@ -12,7 +12,7 @@ class AudienceValidationTest extends TestCase
     /**
      * @test
      */
-    public function audienceValidates()
+    public function audience()
     {
         $key = "example_key";
         $token = array(
@@ -23,7 +23,13 @@ class AudienceValidationTest extends TestCase
             "nbf" => 1357000000
         );
 
+        JWT::$timestamp = [];
+
         $jwt = JWT::encode($token, $key);
+
+        dump(JWT::decode($jwt, $key, ['HS256']));
+
+        die;
 
         $this->assertEquals("portal", Inspect::audience($jwt, "http://example.com")->sub);
 
@@ -34,23 +40,21 @@ class AudienceValidationTest extends TestCase
 
     /**
      * @test
-     * @expectedException \UnexpectedValueException
      */
-    public function wrongNumberOfSegments()
+    public function multipleAudience()
     {
-        $token = "test";
+        $key = "example_key";
+        $token = array(
+            "sub" => "portal",
+            "iss" => "http://example.org",
+            "aud" => ["http://example.com", "http://google.com"],
+            "azp" => ["http://example.com", "http://google.com"],
+            "iat" => 1356999524,
+            "nbf" => 1357000000
+        );
 
-        Inspect::audience($token, "foo");
-    }
+        $jwt = JWT::encode($token, $key);
 
-    /**
-     * @test
-     * @expectedException \UnexpectedValueException
-     */
-    public function validationWrongNumberOfSegments()
-    {
-        $validator = new AudienceValidator("test", "bar");
-
-        $validator->validate();
+        $this->assertEquals("portal", Inspect::audience($jwt, "http://example.com", "http://google.com")->sub);
     }
 }
