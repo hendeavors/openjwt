@@ -1,6 +1,6 @@
 {
     "name": "endeavors/openjwt",
-    "description": "Validate an id token Shoud conform to spec ID Token Validation at openid.net."
+    "description": "Validate an id token Shoud conform to spec ID Token Validation at openid.net.",
     "require-dev": {
         "phpunit/phpunit": "~6.0",
         "symfony/var-dumper": "^3.4",
