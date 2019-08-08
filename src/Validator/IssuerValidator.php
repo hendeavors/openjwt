@@ -35,7 +35,7 @@ class IssuerValidator implements JWTValidator
 
         if ($payload->iss !== $this->issuer) {
             // reject the token
-            throw new UnexpectedValueException("The audience claim received does not match the given set of audiences");
+            throw new UnexpectedValueException("The issuer claim received does not match the given issuer.");
         }
     }
 }

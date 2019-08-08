@@ -55,6 +55,28 @@ class AudienceValidationFailureTest extends TestCase
     /**
      * @test
      * @expectedException \UnexpectedValueException
+     * @expectedExceptionMessage The authorized party claim is not valid.
+     */
+    public function nullAuthorizedPartyClaimPresent()
+    {
+        $key = "example_key";
+        $token = array(
+            "sub" => "portal",
+            "iss" => "http://example.org",
+            "aud" => ["http://example.com", "http://google.com"],
+            "azp" => null,
+            "iat" => 1356999524,
+            "nbf" => 1357000000
+        );
+
+        $jwt = JWT::encode($token, $key);
+
+        $this->assertEquals("portal", Inspect::audience($jwt, "http://example.com", "http://google.com")->sub);
+    }
+
+    /**
+     * @test
+     * @expectedException \UnexpectedValueException
      * @expectedExceptionMessage  Wrong number of segments
      */
     public function wrongNumberOfSegments()

@@ -7,8 +7,10 @@ use Endeavors\OpenJWT\Validator\AlgorithmValidator;
 use Endeavors\OpenJWT\Validator\SignatureValidator;
 use Endeavors\OpenJWT\Validator\AudienceValidator;
 use Endeavors\OpenJWT\Validator\IssuerValidator;
+use Endeavors\OpenJWT\Validator\AuthorizedPartyValidator;
 use Endeavors\OpenJWT\Validator\AggregateValidator;
 use Endeavors\OpenJWT\JWT;
+use Closure;
 
 class Inspect
 {
@@ -22,44 +24,63 @@ class Inspect
          return JWT::decode($value, new InspectionValidator);
      }
 
+     /**
+      * Inspect the JSON web token after validating
+      * The signature
+      * @param  string $value
+      * @param  mixed $key
+      * @return object json decoded payload
+      * @todo needs testing
+      */
      public static function signed($value, $key)
      {
-         $algorithm = new AlgorithmValidator($value);
-         $signature =  new SignatureValidator($value, $key);
-         $aggregate = (new AggregateValidator)->add($algorithm)->add($signature);
-
-         return JWT::decode($value, $aggregate);
+         return JWT::decode($value, new SignatureValidator($value, $key));
      }
 
      /**
       * Inspect the JSON web token after validating
-      * The algorithm and the audience(aud) claim
+      * The audience(aud) claim
       * @param  string $value
       * @param  mixed $audience
       * @return object json decoded payload
       */
      public static function audience($value, ...$audience)
      {
-         $algorithm = new AlgorithmValidator($value);
-         $audience = new AudienceValidator($value, $audience);
-         $aggregate = (new AggregateValidator)->add($algorithm)->add($audience);
-
-         return JWT::decode($value, $aggregate);
+         return JWT::decode($value, new AudienceValidator($value, $audience));
      }
 
      /**
       * Inspect the JSON web token after validating
-      * The algorithm and the issuer(iss) claim
+      * The authorized party claim(azp)
+      * @param  string $value
+      * @param  mixed $audience
+      * @return object json decoded payload
+      */
+     public static function authorized($value, ...$audience)
+     {
+         return JWT::decode($value, new AuthorizedPartyValidator($value, $audience));
+     }
+
+     /**
+      * Inspect the JSON web token after validating
+      * The issuer(iss) claim
       * @param  string $value
       * @param  string $issuer
       * @return object json decoded payload
       */
      public static function issuer($value, string $issuer)
      {
-         $algorithm = new AlgorithmValidator($value);
-         $issuer = new IssuerValidator($value, $issuer);
-         $aggregate = (new AggregateValidator)->add($algorithm)->add($issuer);
+         return JWT::decode($value, new IssuerValidator($value, $issuer));
+     }
 
-         return JWT::decode($value, $aggregate);
+     /**
+      * Combine a set of validators using the AggregateValidator
+      * @param  string  $value   the token
+      * @param  Closure $callback Validators to aggregate
+      * @return object json decoded payload
+      */
+     public static function aggregate($value, Closure $callback)
+     {
+         return JWT::decode($value, $callback(new AggregateValidator, $value));
      }
 }

@@ -3,6 +3,7 @@
 namespace Endeavors\OpenJWT\Validator;
 
 use Endeavors\OpenJWT\Contracts\JWTValidator;
+use LogicException;
 
 class AggregateValidator implements JWTValidator
 {
@@ -10,6 +11,10 @@ class AggregateValidator implements JWTValidator
 
     public function validate()
     {
+        if (count($this->validators) === 0) {
+            throw new LogicException("The AggregateValidator expects at least 1 validator.");
+        }
+
         foreach($this->validators as $validator) {
             $validator->validate();
         }

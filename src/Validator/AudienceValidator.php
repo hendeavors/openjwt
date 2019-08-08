@@ -7,13 +7,9 @@ use Endeavors\OpenJWT\Validator\Validator;
 use Endeavors\OpenJWT\Validator\AuthorizedPartyValidator;
 use UnexpectedValueException;
 
-// The Client MUST validate that the aud (audience) Claim contains its client_id value registered at the Issuer identified by the
-// iss (issuer) Claim as an audience. The aud (audience) Claim MAY contain an array with more than one element.
-// The ID Token MUST be rejected if the ID Token does not list the Client as a valid audience, or if it contains additional audiences not trusted by the Client.
-// If the ID Token contains multiple audiences, the Client SHOULD verify that an azp Claim is present.
-// If an azp (authorized party) Claim is present, the Client SHOULD verify that its client_id is the Claim Value.
-// https://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation
-
+/**
+ * Validates the aud claim according to openid.net
+ */
 class AudienceValidator extends Validator implements JWTValidator
 {
     private $audience;

@@ -6,18 +6,14 @@ use Endeavors\OpenJWT\Contracts\JWTValidator;
 use Endeavors\OpenJWT\Validator\Concerns\Decoding;
 use UnexpectedValueException;
 
-// In the case where the JWS alg is "none", the app must reject any
-// claims where the issuer is different from the url of the authorization server. (3.2.2.11)
-// The client application receiving the identity token must validate that the audience (aud) claim matches its own client identifier
-
 class JWT
 {
     use Decoding;
     /**
-     * [decode description]
-     * @param  [type] $jwt       [description]
+     * Decodes a payload given from a JWT
+     * @param  string $jwt The token
      * @param  $validator Validate before decoding
-     * @return [type]            [description]
+     * @return object
      */
      public static function decode($jwt, JWTValidator $validator)
      {

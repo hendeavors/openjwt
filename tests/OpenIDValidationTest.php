@@ -3,16 +3,16 @@
 namespace Endeavors\OpenJWT\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Endeavors\OpenJWT\Inspect;
+use Endeavors\OpenJWT\OpenIDToken;
 use Endeavors\OpenJWT\Validator\AudienceValidator;
 use Firebase\JWT\JWT;
 
-class AudienceValidationTest extends TestCase
+class OpenIDValidationTest extends TestCase
 {
     /**
      * @test
      */
-    public function audience()
+    public function singleAudience()
     {
         $key = "example_key";
         $token = array(
@@ -25,11 +25,13 @@ class AudienceValidationTest extends TestCase
 
         $jwt = JWT::encode($token, $key);
 
-        $this->assertEquals("portal", Inspect::audience($jwt, "http://example.com")->sub);
+        $token = OpenIDToken::create($jwt)
+        ->requestedAt(time())
+        ->client("http://example.com")
+        ->server("http://example.org")
+        ->decode();
 
-        $validator = new AudienceValidator($jwt, "http://example.com");
-
-        $validator->validate();
+        $this->assertEquals("portal", $token->sub);
     }
 
     /**
@@ -49,6 +51,12 @@ class AudienceValidationTest extends TestCase
 
         $jwt = JWT::encode($token, $key);
 
-        $this->assertEquals("portal", Inspect::audience($jwt, "http://example.com", "http://google.com")->sub);
+        $token = OpenIDToken::create($jwt)
+        ->client("http://example.com", "http://google.com")
+        ->requestedAt(time())
+        ->server("http://example.org")
+        ->decode();
+
+        $this->assertEquals("portal", $token->sub);
     }
 }

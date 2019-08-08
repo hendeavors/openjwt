@@ -31,26 +31,4 @@ class IssuerValidationTest extends TestCase
 
         $validator->validate();
     }
-
-    /**
-     * @test
-     * @expectedException \UnexpectedValueException
-     */
-    public function wrongNumberOfSegments()
-    {
-        $token = "test";
-
-        Inspect::issuer($token, "http://example.org");
-    }
-
-    /**
-     * @test
-     * @expectedException \UnexpectedValueException
-     */
-    public function validationWrongNumberOfSegments()
-    {
-        $validator = new IssuerValidator("test", "http://example.org");
-
-        $validator->validate();
-    }
 }

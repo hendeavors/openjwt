@@ -34,7 +34,6 @@ class AuthorizedPartyValidator extends Validator implements JWTValidator
 
         $payload = static::jsonDecode(static::urlsafeB64Decode($payload));
 
-        // If the ID Token contains multiple audiences, the Client SHOULD verify that an azp Claim is present.
         if (count((array)$payload->aud) > 1 && !property_exists($payload, 'azp')) {
             throw new UnexpectedValueException("An authorized party claim must be present.");
         }
