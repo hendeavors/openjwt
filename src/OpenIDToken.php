@@ -9,6 +9,7 @@ use Endeavors\OpenJWT\Validator\AudienceValidator;
 use Endeavors\OpenJWT\Validator\IssuerValidator;
 use Endeavors\OpenJWT\Validator\IssuedAtValidator;
 use Endeavors\OpenJWT\Validator\AuthorizedPartyValidator;
+use Endeavors\OpenJWT\Validator\SignatureValidator;
 use Endeavors\OpenJWT\Validator\AggregateValidator;
 use LogicException;
 
@@ -28,6 +29,17 @@ class OpenIDToken
         return new static($value);
     }
 
+    public function signed($key, $algorithm = 'RS256')
+    {
+        if (null === $this->validator) {
+            $this->validator = new AggregateValidator();
+        }
+
+        $this->validator->add(new SignatureValidator($this->value, $key, $algorithm));
+
+        return $this;
+    }
+
     public function client(...$audience)
     {
         if (null === $this->validator) {
@@ -41,7 +53,7 @@ class OpenIDToken
         return $this;
     }
 
-    public function server($issuer)
+    public function provider($issuer)
     {
         if (null === $this->validator) {
             $this->validator = new AggregateValidator();

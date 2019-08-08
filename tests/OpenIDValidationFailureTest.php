@@ -30,7 +30,7 @@ class OpenIDValidationFailureTest extends TestCase
         $token = OpenIDToken::create($jwt)
         ->requestedAt(time())
         ->client("http://example.com", "http://google.com")
-        ->server("http://example.org")
+        ->provider("http://example.org")
         ->decode();
     }
 
@@ -56,7 +56,7 @@ class OpenIDValidationFailureTest extends TestCase
         $token = OpenIDToken::create($jwt)
         ->requestedAt(time())
         ->client("http://example.com", "http://google.com")
-        ->server("http://example.org")
+        ->provider("http://example.org")
         ->decode();
     }
 
@@ -82,7 +82,7 @@ class OpenIDValidationFailureTest extends TestCase
         $token = OpenIDToken::create($jwt)
         ->requestedAt(time())
         ->client("http://example.com", "http://google.com")
-        ->server("http://example.org")
+        ->provider("http://example.org")
         ->decode();
     }
 
@@ -108,7 +108,7 @@ class OpenIDValidationFailureTest extends TestCase
         $token = OpenIDToken::create($jwt)
         ->requestedAt(time())
         ->client("http://example.com", "http://google.com")
-        ->server("http://example.org")
+        ->provider("http://example.org")
         ->decode();
     }
 
@@ -134,7 +134,7 @@ class OpenIDValidationFailureTest extends TestCase
         $token = OpenIDToken::create($jwt)
         ->requestedAt(time())
         ->client("http://example.com", "http://google.com")
-        ->server("http://example.org")
+        ->provider("http://example.org")
         ->decode();
     }
 }
