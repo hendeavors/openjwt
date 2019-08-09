@@ -37,6 +37,31 @@ class OpenIDValidationTest extends TestCase
     /**
      * @test
      */
+    public function singleAudienceStrictMode()
+    {
+        $key = "example_key";
+        $token = array(
+            "sub" => "portal",
+            "iss" => "http://example.org",
+            "aud" => "http://example.com",
+            "iat" => 1356999524,
+            "nbf" => 1357000000
+        );
+
+        $jwt = JWT::encode($token, $key);
+
+        $token = OpenIDToken::strict($jwt)
+        ->requestedAt(time())
+        ->client("http://example.com")
+        ->provider("http://example.org")
+        ->decode();
+
+        $this->assertEquals("portal", $token->sub);
+    }
+
+    /**
+     * @test
+     */
     public function multipleAudience()
     {
         $key = "example_key";

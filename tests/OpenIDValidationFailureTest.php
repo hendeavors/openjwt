@@ -137,4 +137,52 @@ class OpenIDValidationFailureTest extends TestCase
         ->provider("http://example.org")
         ->decode();
     }
+
+    /**
+     * @test
+     * @expectedException \LogicException
+     */
+    public function strictModeAudienceOnly()
+    {
+        $key = "example_key";
+        $token = array(
+            "sub" => "portal",
+            "iss" => "http://example.org",
+            "aud" => "http://example.com",
+            "iat" => 1356999524,
+            "nbf" => 1357000000
+        );
+
+        $jwt = JWT::encode($token, $key);
+
+        $token = OpenIDToken::strict($jwt)
+        ->client("http://example.com")
+        ->decode();
+
+        $this->assertEquals("portal", $token->sub);
+    }
+
+    /**
+     * @test
+     * @expectedException \LogicException
+     */
+    public function strictModeProviderOnly()
+    {
+        $key = "example_key";
+        $token = array(
+            "sub" => "portal",
+            "iss" => "http://example.org",
+            "aud" => "http://example.com",
+            "iat" => 1356999524,
+            "nbf" => 1357000000
+        );
+
+        $jwt = JWT::encode($token, $key);
+
+        $token = OpenIDToken::strict($jwt)
+        ->provider("http://example.com")
+        ->decode();
+
+        $this->assertEquals("portal", $token->sub);
+    }
 }

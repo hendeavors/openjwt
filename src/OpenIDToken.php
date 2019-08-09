@@ -17,6 +17,8 @@ class OpenIDToken
 {
     private $validator;
 
+    private $mode = 'normal';
+
     private $claims = [];
 
     public function __construct(string $value)
@@ -27,6 +29,15 @@ class OpenIDToken
     public static function create($value)
     {
         return new static($value);
+    }
+
+    public static function strict($value)
+    {
+        $instance = static::create($value);
+
+        $instance->mode = 'strict';
+
+        return $instance;
     }
 
     public function signed($key, $algorithm = 'RS256')
@@ -85,10 +96,14 @@ class OpenIDToken
             throw new LogicException("Validation requirements must be met prior to decoding id token.");
         }
 
-        $claims = ['iat', 'iss', 'aud'];
-        // we don't care about order here
-        if (sort($claims) != sort($this->claims)) {
-            throw new LogicException(sprintf("Validation for claims %s are required prior to decoding id token.", json_encode(array_values(array_diff($claims, $this->claims)))));
+        if ('strict' === $this->mode) {
+            $claims = ['iat', 'iss', 'aud'];
+            sort($claims);
+            sort($this->claims);
+            // we don't care about order here
+            if ($claims !== $this->claims) {
+                throw new LogicException(sprintf("Validation for claims %s are required prior to decoding id token.", json_encode(array_values(array_diff($claims, $this->claims)))));
+            }
         }
 
         $this->validator->add(new AlgorithmValidator($this->value));
