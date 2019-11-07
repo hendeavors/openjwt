@@ -5,7 +5,7 @@ Inspect or verify a JSON Web Token using various methods.
 
 This library requires the use of [Composer](https://getcomposer.org/)
 
-* Require this package with composer `composer require hendeavors/openjwt`
+* Require this package with composer `composer require endeavors/openjwt`
 
 ## Inspecting
 
